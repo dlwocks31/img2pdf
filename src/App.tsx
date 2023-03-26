@@ -75,37 +75,65 @@ function MyApp() {
           <span className="label-text">첫 페이지 텍스트</span>
         </label>
         <textarea
-          className="textarea textarea-bordered h-24"
-          placeholder="첫 페이지에 텍스트를 쓰고 싶다면 여기에 입력하세요"
+          className="textarea textarea-bordered"
+          placeholder="첫 페이지 텍스트"
           value={text}
           onChange={(e) => setText(e.target.value)}
         ></textarea>
       </div>
-      <div>
+      {fileOrder.length > 0 && (
         <div className="text-xl font-bold">파일 순서</div>
-        {fileOrder.map((f, i) => (
-          <div className="flex">
-            <span className="label-text">{f}</span>
-            {i > 0 && (
-              <button className="btn" onClick={() => handleUp(i)}>
-                Up
-              </button>
-            )}
-            {i < fileOrder.length - 1 && (
-              <button className="btn" onClick={() => handleDown(i)}>
-                Down
-              </button>
-            )}
+      )}
+      {fileOrder.map((file, i) => (
+        <div className="flex gap-2 justify-center items-center">
+          <div className="flex-1">{file}</div>
+          <div className="flex gap-2">
+            <button
+              className={"btn btn-sm " + (i > 0 ? "" : "btn-disabled")}
+              onClick={() => handleUp(i)}
+            >
+              ↑
+            </button>
+            <button
+              className={
+                "btn btn-sm " + (i < fileOrder.length - 1 ? "" : "btn-disabled")
+              }
+              onClick={() => handleDown(i)}
+            >
+              ↓
+            </button>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
 
-      <button className="btn" onClick={generatePdf}>
+      <button
+        className={"btn " + (fileOrder.length > 0 ? "" : "btn-disabled")}
+        onClick={generatePdf}
+      >
         PDF 생성
       </button>
       <button className="btn" onClick={() => window.location.reload()}>
         초기화
       </button>
+      <Footer />
+    </div>
+  );
+}
+
+function Footer() {
+  return (
+    <div className="fixed bottom-0 left-0 right-0 py-2 px-4 border-t ">
+      <p className="text-xs">
+        Source code available on{" "}
+        <a
+          href="https://github.com/dlwocks31/img2pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline"
+        >
+          GitHub
+        </a>
+      </p>
     </div>
   );
 }
