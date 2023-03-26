@@ -25,13 +25,13 @@ function MyApp() {
 
   useEffect(() => {
     urlToBase64("/NanumGothic.ttf").then((base64) => {
-      if (typeof base64 !== "string") {
-        return;
-      }
       jsPDF.API.events.push([
         "addFonts",
         function (this: any) {
-          this.addFileToVFS("NanumGothic-normal.ttf", base64.split(",")[1]);
+          this.addFileToVFS(
+            "NanumGothic-normal.ttf",
+            (base64 as string).split(",")[1],
+          );
           this.addFont("NanumGothic-normal.ttf", "NanumGothic", "normal");
         },
       ]);
