@@ -1,12 +1,39 @@
 import dayjs from "dayjs";
 import jsPDF from "jspdf";
-import { useRef, useState } from "react";
-import "./NanumGothic-normal.js";
+import { useEffect, useRef, useState } from "react";
+
+const urlToBase64 = async (url: string) => {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  return new Promise((onSuccess, onError) => {
+    try {
+      const reader = new FileReader();
+      reader.onload = function () {
+        onSuccess(this.result);
+      };
+      reader.readAsDataURL(blob);
+    } catch (e) {
+      onError(e);
+    }
+  });
+};
 
 function MyApp() {
   const [text, setText] = useState("");
   const [fileOrder, setFileOrder] = useState<string[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    urlToBase64("/NanumGothic.ttf").then((base64) => {
+      jsPDF.API.events.push([
+        "addFonts",
+        function () {
+          this.addFileToVFS("NanumGothic-normal.ttf", base64.split(",")[1]);
+          this.addFont("NanumGothic-normal.ttf", "NanumGothic", "normal");
+        },
+      ]);
+    });
+  }, []);
 
   async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const fileList = Array.from(e.target.files ?? []);
@@ -38,7 +65,7 @@ function MyApp() {
     doc.setFont("NanumGothic");
 
     if (text.length > 0) {
-      doc.text(text, 10, 10);
+      doc.text(text, 10, 10, { maxWidth: width - 20 });
       doc.addPage();
     }
     const fileList = Array.from(fileRef.current?.files ?? []);
