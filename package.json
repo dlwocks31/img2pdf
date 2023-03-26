@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@types/react-pdf": "^6.2.0",
     "daisyui": "^2.51.5",
     "dayjs": "^1.11.7",
     "jspdf": "^2.5.1",
