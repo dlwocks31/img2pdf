@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import jsPDF from "jspdf";
 import { useRef, useState } from "react";
+import "./NanumGothic-normal.js";
 
 function MyApp() {
   const [text, setText] = useState("");
@@ -34,6 +35,7 @@ function MyApp() {
     const doc = new jsPDF("p", "mm", "a4");
     const width = doc.internal.pageSize.getWidth();
     const height = doc.internal.pageSize.getHeight();
+    doc.setFont("NanumGothic");
 
     if (text.length > 0) {
       doc.text(text, 10, 10);
