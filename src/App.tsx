@@ -1,34 +1,61 @@
 import jsPDF from "jspdf";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 function MyApp() {
   const [text, setText] = useState("");
+  const [fileOrder, setFileOrder] = useState<string[]>([]);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = e.target.files;
-    if (files) {
-      const doc = new jsPDF("p", "mm", "a4");
-      const width = doc.internal.pageSize.getWidth();
-      const height = doc.internal.pageSize.getHeight();
+    const fileList = Array.from(e.target.files ?? []);
+    const fileNames = fileList.map((f) => f.name);
+    setFileOrder(fileNames);
+  }
 
-      if (text.length > 0) {
-        doc.text(text, 10, 10);
+  function handleUp(i: number) {
+    const newOrder = [...fileOrder];
+    const temp = newOrder[i];
+    newOrder[i] = newOrder[i - 1];
+    newOrder[i - 1] = temp;
+    setFileOrder(newOrder);
+  }
+
+  function handleDown(i: number) {
+    const newOrder = [...fileOrder];
+    const temp = newOrder[i];
+    newOrder[i] = newOrder[i + 1];
+    newOrder[i + 1] = temp;
+    setFileOrder(newOrder);
+  }
+
+  function generatePdf() {
+    const doc = new jsPDF("p", "mm", "a4");
+    const width = doc.internal.pageSize.getWidth();
+    const height = doc.internal.pageSize.getHeight();
+
+    if (text.length > 0) {
+      doc.text(text, 10, 10);
+      doc.addPage();
+    }
+    const fileList = Array.from(fileRef.current?.files ?? []);
+    for (let i = 0; i < fileOrder.length; i++) {
+      const fileName = fileOrder[i];
+      const file = fileList.find((f) => f.name === fileName);
+      if (!file) {
+        continue;
+      }
+
+      const format = file.type === "image/jpeg" ? "JPEG" : "PNG";
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+
+      if (i != 0) {
         doc.addPage();
       }
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const format = file.type === "image/jpeg" ? "JPEG" : "PNG";
-        const img = new Image();
-        img.src = URL.createObjectURL(file);
-
-        if (i != 0) {
-          doc.addPage();
-        }
-        doc.addImage(img, format, 10, 10, width - 20, height - 20);
-      }
-
-      doc.save("test.pdf");
+      doc.addImage(img, format, 10, 10, width - 20, height - 20);
     }
+
+    doc.save("test.pdf");
   }
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -40,6 +67,7 @@ function MyApp() {
           accept="image/*"
           multiple
           onChange={onFileChange}
+          ref={fileRef}
         />
       </div>
       <div className="form-control">
@@ -53,7 +81,31 @@ function MyApp() {
           onChange={(e) => setText(e.target.value)}
         ></textarea>
       </div>
-      <button onClick={() => window.location.reload()}>초기화</button>
+      <div>
+        <div className="text-xl font-bold">파일 순서</div>
+        {fileOrder.map((f, i) => (
+          <div className="flex">
+            <span className="label-text">{f}</span>
+            {i > 0 && (
+              <button className="btn" onClick={() => handleUp(i)}>
+                Up
+              </button>
+            )}
+            {i < fileOrder.length - 1 && (
+              <button className="btn" onClick={() => handleDown(i)}>
+                Down
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <button className="btn" onClick={generatePdf}>
+        PDF 생성
+      </button>
+      <button className="btn" onClick={() => window.location.reload()}>
+        초기화
+      </button>
     </div>
   );
 }
