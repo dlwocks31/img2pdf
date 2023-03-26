@@ -25,9 +25,12 @@ function MyApp() {
 
   useEffect(() => {
     urlToBase64("/NanumGothic.ttf").then((base64) => {
+      if (typeof base64 !== "string") {
+        return;
+      }
       jsPDF.API.events.push([
         "addFonts",
-        function () {
+        function (this: any) {
           this.addFileToVFS("NanumGothic-normal.ttf", base64.split(",")[1]);
           this.addFont("NanumGothic-normal.ttf", "NanumGothic", "normal");
         },
@@ -110,7 +113,7 @@ function MyApp() {
         </div>
         <textarea
           className="textarea textarea-bordered"
-          placeholder="첫 페이지 텍스트"
+          placeholder="첫 페이지 텍스트를 입력하세요."
           value={text}
           onChange={(e) => setText(e.target.value)}
         ></textarea>
