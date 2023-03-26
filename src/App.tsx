@@ -65,10 +65,10 @@ function MyApp() {
   }
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex flex-col gap-4 p-4 flex-grow">
         <div className="text-3xl font-bold text-center">img2pdf</div>
         <div className="text-xl font-bold">1. PDF로 만들 사진들 선택</div>
-        <div className="m-auto">
+        <div className="mx-auto">
           <input
             type="file"
             className="file-input file-input-bordered w-full max-w-sm"
