@@ -64,63 +64,66 @@ function MyApp() {
     doc.save(`img2pdf_${formattedNow}.pdf`);
   }
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <div className="text-3xl font-bold text-center">img2pdf</div>
-      <div className="text-xl font-bold">1. PDF로 만들 사진들 선택</div>
-      <div className="m-auto">
-        <input
-          type="file"
-          className="file-input file-input-bordered w-full max-w-sm"
-          accept="image/*"
-          multiple
-          onChange={onFileChange}
-          ref={fileRef}
-        />
-      </div>
-      <div className="text-xl font-bold">
-        2. (선택) PDF 첫 페이지에 텍스트 입력
-      </div>
-      <textarea
-        className="textarea textarea-bordered"
-        placeholder="첫 페이지 텍스트"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      ></textarea>
-      {fileOrder.length > 0 && (
-        <div className="text-xl font-bold">3. 파일 순서 지정</div>
-      )}
-      {fileOrder.map((file, i) => (
-        <div className="flex gap-2 justify-center items-center">
-          <div className="flex-1 break-all text-sm">{file}</div>
-          <div className="flex gap-2">
-            <button
-              className={"btn btn-sm " + (i > 0 ? "" : "btn-disabled")}
-              onClick={() => handleUp(i)}
-            >
-              ↑
-            </button>
-            <button
-              className={
-                "btn btn-sm " + (i < fileOrder.length - 1 ? "" : "btn-disabled")
-              }
-              onClick={() => handleDown(i)}
-            >
-              ↓
-            </button>
-          </div>
+    <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col gap-4 p-4">
+        <div className="text-3xl font-bold text-center">img2pdf</div>
+        <div className="text-xl font-bold">1. PDF로 만들 사진들 선택</div>
+        <div className="m-auto">
+          <input
+            type="file"
+            className="file-input file-input-bordered w-full max-w-sm"
+            accept="image/*"
+            multiple
+            onChange={onFileChange}
+            ref={fileRef}
+          />
         </div>
-      ))}
-      <button
-        className={
-          "btn btn-primary" + (fileOrder.length > 0 ? "" : "btn-disabled")
-        }
-        onClick={generatePdf}
-      >
-        PDF 생성
-      </button>
-      <button className="btn" onClick={() => window.location.reload()}>
-        초기화
-      </button>
+        <div className="text-xl font-bold">
+          2. (선택) PDF 첫 페이지에 텍스트 입력
+        </div>
+        <textarea
+          className="textarea textarea-bordered"
+          placeholder="첫 페이지 텍스트"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        ></textarea>
+        {fileOrder.length > 0 && (
+          <div className="text-xl font-bold">3. 파일 순서 지정</div>
+        )}
+        {fileOrder.map((file, i) => (
+          <div className="flex gap-2 justify-center items-center">
+            <div className="flex-1 break-all text-sm">{file}</div>
+            <div className="flex gap-2">
+              <button
+                className={"btn btn-sm " + (i > 0 ? "" : "btn-disabled")}
+                onClick={() => handleUp(i)}
+              >
+                ↑
+              </button>
+              <button
+                className={
+                  "btn btn-sm " +
+                  (i < fileOrder.length - 1 ? "" : "btn-disabled")
+                }
+                onClick={() => handleDown(i)}
+              >
+                ↓
+              </button>
+            </div>
+          </div>
+        ))}
+        <button
+          className={
+            "btn btn-primary" + (fileOrder.length > 0 ? "" : "btn-disabled")
+          }
+          onClick={generatePdf}
+        >
+          PDF 생성
+        </button>
+        <button className="btn" onClick={() => window.location.reload()}>
+          초기화
+        </button>
+      </div>
       <Footer />
     </div>
   );
@@ -128,8 +131,8 @@ function MyApp() {
 
 function Footer() {
   return (
-    <div className="fixed bottom-0 left-0 right-0 py-2 px-4 border-t ">
-      <p className="text-xs">
+    <div className="py-2 px-4 border-t border-neutral bg-base-100">
+      <p className="text-xs text-base-content">
         Source code available on{" "}
         <a
           href="https://github.com/dlwocks31/img2pdf"
