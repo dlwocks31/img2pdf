@@ -24,21 +24,35 @@ function MyApp() {
         if (i != 0) {
           doc.addPage();
         }
-        doc.addImage(img, "JPEG", 10, 10, width - 20, height - 20);
+        doc.addImage(img, format, 10, 10, width - 20, height - 20);
       }
 
       doc.save("test.pdf");
     }
   }
   return (
-    <div>
-      <input type="file" accept="image/*" multiple onChange={onFileChange} />
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-
+    <div className="flex flex-col gap-4 p-4">
+      <div className="text-3xl font-bold text-center">img2pdf</div>
+      <div className="m-auto">
+        <input
+          type="file"
+          className="file-input file-input-bordered w-full max-w-sm"
+          accept="image/*"
+          multiple
+          onChange={onFileChange}
+        />
+      </div>
+      <div className="form-control">
+        <label className="label">
+          <span className="label-text">첫 페이지 텍스트</span>
+        </label>
+        <textarea
+          className="textarea textarea-bordered h-24"
+          placeholder="첫 페이지에 텍스트를 쓰고 싶다면 여기에 입력하세요"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        ></textarea>
+      </div>
       <button onClick={() => window.location.reload()}>초기화</button>
     </div>
   );
