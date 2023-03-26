@@ -9,6 +9,7 @@ function MyApp() {
   async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const fileList = Array.from(e.target.files ?? []);
     const fileNames = fileList.map((f) => f.name);
+    fileNames.sort();
     setFileOrder(fileNames);
   }
 
