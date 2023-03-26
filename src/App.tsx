@@ -144,7 +144,7 @@ function MyApp() {
         ))}
         <button
           className={
-            "btn btn-primary " + (fileOrder.length > 0 ? "" : "btn-disabled")
+            "btn btn-accent " + (fileOrder.length > 0 ? "" : "btn-disabled")
           }
           onClick={generatePdf}
         >
