@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import jsPDF from "jspdf";
 import { useRef, useState } from "react";
 
@@ -56,11 +57,14 @@ function MyApp() {
       doc.addImage(img, format, 10, 10, width - 20, height - 20);
     }
 
-    doc.save("test.pdf");
+    const formattedNow = dayjs().format("YYYYMMDD_HHmmss");
+
+    doc.save(`img2pdf_${formattedNow}.pdf`);
   }
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="text-3xl font-bold text-center">img2pdf</div>
+      <div className="text-xl font-bold">1. PDF로 만들 사진들 선택</div>
       <div className="m-auto">
         <input
           type="file"
@@ -71,23 +75,21 @@ function MyApp() {
           ref={fileRef}
         />
       </div>
-      <div className="form-control">
-        <label className="label">
-          <span className="label-text">첫 페이지 텍스트</span>
-        </label>
-        <textarea
-          className="textarea textarea-bordered"
-          placeholder="첫 페이지 텍스트"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        ></textarea>
+      <div className="text-xl font-bold">
+        2. (선택) PDF 첫 페이지에 텍스트 입력
       </div>
+      <textarea
+        className="textarea textarea-bordered"
+        placeholder="첫 페이지 텍스트"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      ></textarea>
       {fileOrder.length > 0 && (
-        <div className="text-xl font-bold">파일 순서</div>
+        <div className="text-xl font-bold">3. 파일 순서 지정</div>
       )}
       {fileOrder.map((file, i) => (
         <div className="flex gap-2 justify-center items-center">
-          <div className="flex-1">{file}</div>
+          <div className="flex-1 break-all text-sm">{file}</div>
           <div className="flex gap-2">
             <button
               className={"btn btn-sm " + (i > 0 ? "" : "btn-disabled")}
@@ -106,9 +108,10 @@ function MyApp() {
           </div>
         </div>
       ))}
-
       <button
-        className={"btn " + (fileOrder.length > 0 ? "" : "btn-disabled")}
+        className={
+          "btn btn-primary" + (fileOrder.length > 0 ? "" : "btn-disabled")
+        }
         onClick={generatePdf}
       >
         PDF 생성
